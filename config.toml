@@ -1,0 +1,16 @@
+kp = 0.05
+ki = 0
+kd = 0
+
+max_range = 500
+max_speed = 10
+
+tracking_on_left = true
+tracking_on_right = true
+
+trigger_bot_mode = false
+
+model_path = "model.onnx"
+
+conf_threshold = 0.5
+iou_threshold = 0.4

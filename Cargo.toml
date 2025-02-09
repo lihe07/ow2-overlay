@@ -1,0 +1,22 @@
+[package]
+name = "rust-overlay"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0.95"
+bevy = "0.15.2"
+fast_image_resize = { version = "5.1.1", features = ["image", "rayon"] }
+image = "0.25.5"
+# nalgebra = "0.33.2"
+ndarray = "0.16.1"
+ort = { version = "=2.0.0-rc.9", features = [
+  "cuda",
+  "tensorrt",
+  "load-dynamic",
+] }
+rdev = "0.5.3"
+serde = { version = "1.0.217", features = ["derive"] }
+tfc = { version = "0.7.0", default-features = false }
+toml = "0.8.20"
+x11rb = { version = "0.13.1", features = ["shm"] }
