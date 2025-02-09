@@ -95,7 +95,12 @@ impl Model {
 
         let sess = Session::builder()?
             .with_execution_providers([
-                execution_providers::TensorRTExecutionProvider::default().build(),
+                execution_providers::TensorRTExecutionProvider::default()
+                    .with_engine_cache(true)
+                    .with_engine_cache_path("./engine_cache")
+                    .with_builder_optimization_level(5)
+                    .with_fp16(true)
+                    .build(),
                 // execution_providers::CUDAExecutionProvider::default().build(),
                 // execution_providers::CPUExecutionProvider::default().build(),
             ])?
@@ -147,7 +152,7 @@ impl Model {
             .map(|x| (x[0], x[1], x[2], x[3], x[4]))
             .collect::<Vec<_>>();
 
-        Ok(nms_center(pred, self.iou_threshold)
+        Ok(crate::nms::nms_center_opt(pred, self.iou_threshold)
             .into_iter()
             .map(|x| (x.0 / 640.0, x.1 / 640.0, x.2 / 640.0, x.3 / 640.0, x.4))
             .collect())

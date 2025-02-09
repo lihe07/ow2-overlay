@@ -1,6 +1,7 @@
 mod gui;
 mod inference;
 mod inputs;
+mod nms;
 mod wincap;
 
 use bevy::{
@@ -60,9 +61,14 @@ struct AppConfig {
 
     trigger_bot_mode: bool,
 
+    trigger_on_right: bool,
+    trigger_on_side: bool,
+
     model_path: String,
     conf_threshold: f32,
     iou_threshold: f32,
+
+    window_name: String,
 }
 
 fn main() {

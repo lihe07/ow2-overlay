@@ -8,9 +8,14 @@ max_speed = 10
 tracking_on_left = true
 tracking_on_right = true
 
-trigger_bot_mode = false
+trigger_bot_mode = true
 
 model_path = "model.onnx"
 
 conf_threshold = 0.5
 iou_threshold = 0.4
+
+window_name = "Overwatch"
+
+trigger_on_right = true
+trigger_on_side = false

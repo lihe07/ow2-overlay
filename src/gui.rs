@@ -136,7 +136,7 @@ impl Plugin for MyPlugin {
             app.add_systems(Update, detect_and_draw_boxes.pipe(tracking_bot));
         }
 
-        let window_id = crate::wincap::find_window_id("Chromium").unwrap();
+        let window_id = crate::wincap::find_window_id(&self.config.window_name).unwrap();
 
         app.insert_resource(Boxes {
             wincap: crate::wincap::WinCap::new(window_id).unwrap(),
@@ -297,7 +297,9 @@ fn tracking_bot(
         let dx = head_line_x - screen_width_half;
         let dy = head_line_y - screen_height_half;
 
-        if crate::inputs::is_mouse_left_pressed() || crate::inputs::is_mouse_right_pressed() {
+        if (crate::inputs::is_mouse_left_pressed() && config.tracking_on_left)
+            || (crate::inputs::is_mouse_right_pressed() && config.tracking_on_right)
+        {
             mouse_pid.update((dx, dy));
         }
     }
@@ -307,7 +309,19 @@ fn trigger_bot(
     boxes: In<Vec<BBOX>>,
     primary_window: Single<&mut Window, With<PrimaryWindow>>,
     mut mouse_pid: ResMut<crate::inputs::MousePID>,
+    config: Res<crate::AppConfig>,
 ) {
+    if config.trigger_on_right && !crate::inputs::is_mouse_right_pressed() {
+        return;
+    }
+
+    if config.trigger_on_side
+        && !(crate::inputs::is_mouse_side_up_pressed()
+            || crate::inputs::is_mouse_side_down_pressed())
+    {
+        return;
+    }
+
     let resolution = primary_window.resolution.clone();
     let screen_width_half = resolution.width() / 2.0;
     let screen_height_half = resolution.height() / 2.0;

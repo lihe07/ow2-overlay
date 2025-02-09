@@ -77,6 +77,8 @@ impl MousePID {
 struct InputState {
     mouse_left_pressed: AtomicBool,
     mouse_right_pressed: AtomicBool,
+    mouse_side_up_pressed: AtomicBool,
+    mouse_side_down_pressed: AtomicBool,
 }
 
 // make a global mutex variable
@@ -114,6 +116,36 @@ fn global_event_callback(event: rdev::Event) {
                 .store(false, Ordering::Relaxed);
         },
 
+        rdev::EventType::ButtonPress(rdev::Button::Unknown(8)) => unsafe {
+            INPUT_STATE
+                .as_ref()
+                .unwrap()
+                .mouse_side_down_pressed
+                .store(true, Ordering::Relaxed);
+        },
+        rdev::EventType::ButtonRelease(rdev::Button::Unknown(8)) => unsafe {
+            INPUT_STATE
+                .as_ref()
+                .unwrap()
+                .mouse_side_down_pressed
+                .store(false, Ordering::Relaxed);
+        },
+
+        rdev::EventType::ButtonPress(rdev::Button::Unknown(9)) => unsafe {
+            INPUT_STATE
+                .as_ref()
+                .unwrap()
+                .mouse_side_up_pressed
+                .store(true, Ordering::Relaxed);
+        },
+        rdev::EventType::ButtonRelease(rdev::Button::Unknown(9)) => unsafe {
+            INPUT_STATE
+                .as_ref()
+                .unwrap()
+                .mouse_side_up_pressed
+                .store(false, Ordering::Relaxed);
+        },
+
         rdev::EventType::KeyPress(rdev::Key::End) => {
             // Shutdown the program
             std::process::exit(0);
@@ -128,6 +160,8 @@ pub fn init_input_state() {
         INPUT_STATE = Some(InputState {
             mouse_left_pressed: AtomicBool::new(false),
             mouse_right_pressed: AtomicBool::new(false),
+            mouse_side_up_pressed: AtomicBool::new(false),
+            mouse_side_down_pressed: AtomicBool::new(false),
         });
     }
 
@@ -150,6 +184,26 @@ pub fn is_mouse_right_pressed() -> bool {
             .as_ref()
             .unwrap()
             .mouse_right_pressed
+            .load(Ordering::Relaxed)
+    }
+}
+
+pub fn is_mouse_side_up_pressed() -> bool {
+    unsafe {
+        INPUT_STATE
+            .as_ref()
+            .unwrap()
+            .mouse_side_up_pressed
+            .load(Ordering::Relaxed)
+    }
+}
+
+pub fn is_mouse_side_down_pressed() -> bool {
+    unsafe {
+        INPUT_STATE
+            .as_ref()
+            .unwrap()
+            .mouse_side_down_pressed
             .load(Ordering::Relaxed)
     }
 }
