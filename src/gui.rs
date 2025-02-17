@@ -262,7 +262,7 @@ fn tracking_bot(
     let screen_height_half = resolution.height() / 2.0;
 
     for (x, y, w, h, _) in boxes.iter() {
-        let head_line_y = y - 0.3 * h;
+        let head_line_y = y - 0.1 * h;
         let head_line_x = *x;
 
         // Calculate the dist to the center of the screen
@@ -327,10 +327,11 @@ fn trigger_bot(
     let screen_height_half = resolution.height() / 2.0;
 
     for (x, y, w, h, _) in boxes.iter() {
-        let left = x - w / 2.0;
-        let right = x + w / 2.0;
-        let top = y - h / 2.0;
-        let bottom = y + h / 2.0;
+        let left = x - w / 2.0 + config.trigger_box_padding;
+        let right = x + w / 2.0 - config.trigger_box_padding;
+        let top = y - h / 2.0 + config.trigger_box_padding;
+        let bottom = y + h / 2.0 - config.trigger_box_padding;
+
         // Check if the target is in the center of the screen
         if left < screen_width_half
             && right > screen_width_half

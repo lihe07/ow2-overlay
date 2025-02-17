@@ -64,6 +64,8 @@ struct AppConfig {
     trigger_on_right: bool,
     trigger_on_side: bool,
 
+    trigger_box_padding: f32,
+
     model_path: String,
     conf_threshold: f32,
     iou_threshold: f32,

@@ -3,12 +3,12 @@ ki = 0
 kd = 0
 
 max_range = 500
-max_speed = 10
+max_speed = 20
 
 tracking_on_left = true
-tracking_on_right = true
+tracking_on_right = false
 
-trigger_bot_mode = true
+trigger_bot_mode = false
 
 model_path = "model.onnx"
 
@@ -19,3 +19,5 @@ window_name = "Overwatch"
 
 trigger_on_right = true
 trigger_on_side = false
+
+trigger_box_padding = 3
