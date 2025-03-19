@@ -1,5 +1,6 @@
 use std::{cmp::Ordering, path::Path};
 
+use bevy::log::info;
 use image::DynamicImage;
 use ort::{
     execution_providers, inputs,
@@ -93,12 +94,13 @@ impl Model {
     ) -> anyhow::Result<Self> {
         ort::init_from("./onnxruntime-linux-x64-gpu-1.20.1/lib/libonnxruntime.so").commit()?;
 
+        info!("Initializing ONNX Runtime");
         let sess = Session::builder()?
             .with_execution_providers([
                 execution_providers::TensorRTExecutionProvider::default()
                     .with_engine_cache(true)
                     .with_engine_cache_path("./engine_cache")
-                    .with_builder_optimization_level(5)
+                    .with_builder_optimization_level(5) //
                     .with_fp16(true)
                     .build(),
                 // execution_providers::CUDAExecutionProvider::default().build(),
@@ -106,6 +108,7 @@ impl Model {
             ])?
             .with_optimization_level(GraphOptimizationLevel::Level3)?
             .commit_from_file(path)?;
+        info!("Initialized ONNX Runtime");
 
         let resizer = fast_image_resize::Resizer::new();
 

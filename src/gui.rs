@@ -128,7 +128,7 @@ impl Plugin for MyPlugin {
         app.insert_resource(self.config.clone());
 
         app.add_systems(Startup, setup);
-        app.add_systems(First, entity_count.pipe(diagnostic_system));
+        // app.add_systems(First, entity_count.pipe(diagnostic_system));
 
         if self.config.trigger_bot_mode {
             app.add_systems(Update, detect_and_draw_boxes.pipe(trigger_bot));
